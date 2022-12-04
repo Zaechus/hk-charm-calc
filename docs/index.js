@@ -71,8 +71,13 @@ selectCharm("assets/Wayward_Compass.png")
 
 let totalCost = 0;
 
-function updateNotches() {
-    document.getElementById("overcharmed").style.opacity = "0%";
+function updateNotches(cost) {
+    totalCost += cost;
+
+    let overcharmed = document.getElementById("overcharmed");
+    overcharmed.innerHTML = "Equipped";
+    overcharmed.style.color = "#fff";
+
     for (let x = 0; x < 11; ++x) {
         document.getElementById("notch_list").children.item(x).style.opacity = "33%";
     }
@@ -86,51 +91,93 @@ function updateNotches() {
         document.getElementById("notch_list").children.item(x).style.opacity = "100%";
     }
     if (totalCost > 11) {
-        document.getElementById("overcharmed").style.opacity = "100%";
-        document.getElementById("equipped").style.setProperty("--background-image", "url(\"assets/Overcharm.png\")");
+        overcharmed.innerHTML = "OVERCHARMED";
+        overcharmed.style.color = "#f0f"
     }
 }
 
 document.getElementById("charms").addEventListener("click", function (e) {
     if (e.target.tagName === "IMG") {
         let src = e.target.getAttribute("src");
-        selectCharm(src);
+        let name = fileToName(src);
 
-        if (totalCost < 11 && !e.target.classList.contains("equipped")) {
-            e.target.classList.add("equipped");
+        if (name != "Void Heart") {
+            if (e.target.classList.contains("equipped")) {
+                removeEquipped(src);
+            } else if (totalCost < 11) {
+                e.target.classList.add("equipped");
 
-            document.getElementById("equipped").innerHTML += `<div><img class="charm" src="${src}"></div>`;
-            totalCost += charms[fileToName(src)][0];
-            updateNotches();
+                document.getElementById("equipped").innerHTML += `<div><img class="charm" src="${src}"></div>`;
+                updateNotches(charms[name][0]);
+            }
         }
+    }
+});
+
+
+document.getElementById("equipped").addEventListener("mouseover", function (e) {
+    if (e.target.tagName === "IMG") {
+        let src = e.target.getAttribute("src");
+        selectCharm(src);
+    }
+});
+
+document.getElementById("charms").addEventListener("mouseover", function (e) {
+    if (e.target.tagName === "IMG") {
+        let src = e.target.getAttribute("src");
+        selectCharm(src);
     }
 });
 
 document.getElementById("equipped").addEventListener("click", function (e) {
     if (e.target.tagName === "IMG") {
         let src = e.target.getAttribute("src");
+        let name = fileToName(src);
 
-        for (let x = 0; x < 40; ++x) {
-            let img = document.getElementById("charms").children.item(x).firstChild;
+        if (name != "Void Heart") {
+            for (let x = 0; x < 40; ++x) {
+                let img = document.getElementById("charms").children.item(x).firstChild;
 
-            if (img.getAttribute("src") == src) {
-                e.target.outerHTML = '';
-                totalCost -= charms[fileToName(src)][0];
-                updateNotches();
-                img.classList.remove("equipped");
+                if (img.getAttribute("src") == src) {
+                    e.target.parentNode.outerHTML = '';
+                    updateNotches(-charms[name][0]);
+                    img.classList.remove("equipped");
+                }
             }
         }
     }
 });
 
+function removeEquipped(src) {
+    let name = fileToName(src);
+    let children = document.getElementById("equipped").children;
+
+    for (let x = 0; x < children.length; ++x) {
+        if (children[x].firstChild.getAttribute("src") === src) {
+            children[x].outerHTML = '';
+            updateNotches(-charms[name][0]);
+        }
+    }
+    for (let x = 0; x < 40; ++x) {
+        let img = document.getElementById("charms").children.item(x).firstChild;
+
+        if (img.getAttribute("src") == src) {
+            img.classList.remove("equipped");
+        }
+    }
+}
+
 function switchCharm(e, a, b) {
     let src = e.target.getAttribute("src");
+
     if (src === a) {
+        removeEquipped(a);
         e.target.src = b;
-        selectCharm(e.target.getAttribute("src"));
+        selectCharm(b);
     } else if (src === b) {
+        removeEquipped(b);
         e.target.src = a;
-        selectCharm(e.target.getAttribute("src"));
+        selectCharm(a);
     }
 }
 
@@ -151,17 +198,26 @@ document.getElementById("grimm_charm").addEventListener("contextmenu", function 
 });
 
 document.getElementById("useless_charm").addEventListener("contextmenu", function (e) {
-    let a = "assets/Kingsoul.png";
-    let b = "assets/Void_Heart.png"
+    let king = "assets/Kingsoul.png";
+    let voidh = "assets/Void_Heart.png"
 
     let src = e.target.getAttribute("src");
-    if (src === a) {
-        e.target.src = b;
-        selectCharm(e.target.getAttribute("src"));
+    if (src === king) {
+        e.target.src = voidh;
+        selectCharm(voidh);
         document.getElementById("void_heart").style.opacity = "100%";
-    } else if (src === b) {
-        e.target.src = a;
-        selectCharm(e.target.getAttribute("src"));
+
+        let children = document.getElementById("equipped").children;
+        for (let x = 0; x < children.length; ++x) {
+            if (children[x].firstChild.getAttribute("src") === king) {
+                children[x].outerHTML = '';
+                updateNotches(-5);
+            }
+        }
+    } else if (src === voidh) {
+        e.target.src = king;
+        selectCharm(king);
         document.getElementById("void_heart").style.opacity = "0%";
+        document.getElementById("useless_charm").classList.remove("equipped");
     }
 });
