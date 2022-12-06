@@ -1,8 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html, body {
   background: black;
   color: white;
-  font-family: "Liberation Serif", serif;
-  margin: 0;
+  font-family: "Perpetua", serif;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -14,44 +18,47 @@ html, body {
 	-webkit-app-region: no-drag;
 }
 
+@font-face {
+    font-family: "Perpetua";
+    src: url("assets/Perpetua.ttf");
+}
+
 h1, h2, h3 {
-  margin: 0;
+  font-weight: normal;
 }
 
 h1 {
-  font-size: 2.5em;
-  font-weight: normal;
+  font-size: 2.9em;
 }
 
 h2 {
-  font-size: 2.1em;
-  font-weight: normal;
+  font-size: 2.5em;
 }
 
 h3 {
-  font-size: 1.6em;
-  font-weight: normal;
+  font-size: 1.9em;
 }
 
 p {
-  font-size: 1.7em;
-  line-height: 1.4;
+  font-size: 1.9em;
+  line-height: 1.1;
+  margin-right: 0.3em;
 }
 
 hr {
   border: none;
-  width: 95%;
-  height: 2px;
+  width: 100%;
+  height: 4px;
   background-color: #fff;
+  margin: 1em auto 3em;
 }
 
 .charm {
-  width: 6.1em;
-  height: 6.1em;
+  height: 6em;
 }
 
 #title {
-  padding-top: 2em;
+  margin-top: 2em;
   text-align: center;
 }
 
@@ -59,9 +66,7 @@ hr {
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  margin: 4em 6em;
-  margin-top: 0;
-  padding: 4em;
+  margin: 5.8em 10.5em 0;
 }
 
 #left {
@@ -71,13 +76,25 @@ hr {
 }
 
 #right {
+  margin-left: 1.5em;
+  margin-right: 1em;
   grid-column: 7 / 11;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.top {
+  margin-left: 1.3em;
+}
+
+#overcharmed {
+  margin-left: 0.9em;
 }
 
 #equipped {
-  height: 20%;
+  margin-left: 1.8em;
+  margin-bottom: 2em;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -91,8 +108,11 @@ hr {
 
 #notches {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+}
+
+#notches img {
+  height: 3em;
 }
 
 #notches img:not(.purple_notch) {
@@ -104,10 +124,11 @@ hr {
 }
 
 #charms {
-  height: 60%;
   display: grid;
   grid-template-columns: repeat(21, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-auto-rows: minmax(min-content, max-content);
+  justify-items: center;
+  align-items: center;
 }
 
 #charms > * {
@@ -120,8 +141,7 @@ hr {
 }
 
 #charms img {
-  width: 5em;
-  height: 5em;
+  height: 5.2em;
 }
 
 .equipped {
@@ -130,13 +150,8 @@ hr {
   box-shadow: 0 0 50px 12px lightblue, inset 0 0 50px lightblue;
 }
 
-#right > * {
-  padding: 0.5em;
-  text-align: center;
-}
-
-#right > p {
-  text-align: left;
+#name {
+  margin-bottom: 0.5em;
 }
 
 #cost {
@@ -147,6 +162,11 @@ hr {
 }
 
 #symbol {
-  width: 8em;
-  height: 8em;
+  height: 7em;
+  margin: 4em 0 4em;
+}
+
+#desc {
+  font-size: 2.1em;
+  margin-left: 1em;
 }

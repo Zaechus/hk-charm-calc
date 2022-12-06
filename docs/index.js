@@ -62,7 +62,7 @@ function selectCharm(file) {
     if (charms[name][0] > 0) {
         cost.innerHTML = "<p>Cost</p>";
         for (let x = 0; x < charms[name][0]; ++x) {
-            cost.innerHTML += "<div><img src=\"assets/HK_Notch.png\"></div>";
+            cost.innerHTML += "<img src=\"assets/HK_Notch.png\">";
         }
     }
 }
@@ -79,13 +79,13 @@ function updateNotches(cost) {
     overcharmed.style.color = "#fff";
 
     for (let x = 0; x < 11; ++x) {
-        document.getElementById("notch_list").children.item(x).style.opacity = "33%";
+        document.getElementById("notches").children.item(x).style.opacity = "33%";
     }
     for (let x = 11; x < 14; ++x) {
-        document.getElementById("notch_list").children.item(x).style.opacity = "0%";
+        document.getElementById("notches").children.item(x).style.opacity = "0%";
     }
     for (let x = 0; x < totalCost; ++x) {
-        document.getElementById("notch_list").children.item(x).style.opacity = "100%";
+        document.getElementById("notches").children.item(x).style.opacity = "100%";
     }
     if (totalCost > 11) {
         overcharmed.innerHTML = "OVERCHARMED";
@@ -98,13 +98,13 @@ function removeEquipped(src) {
     let children = document.getElementById("equipped").children;
 
     for (let x = 0; x < children.length; ++x) {
-        if (children[x].firstChild.getAttribute("src") === src) {
+        if (children[x].getAttribute("src") === src) {
             children[x].outerHTML = '';
             updateNotches(-charms[name][0]);
         }
     }
     for (let x = 0; x < 40; ++x) {
-        let img = document.getElementById("charms").children.item(x).firstChild;
+        let img = document.getElementById("charms").children.item(x);
 
         if (img.getAttribute("src") == src) {
             img.classList.remove("equipped");
@@ -133,10 +133,10 @@ document.getElementById("equipped").addEventListener("click", function (e) {
 
         if (name != "Void Heart") {
             for (let x = 0; x < 40; ++x) {
-                let img = document.getElementById("charms").children.item(x).firstChild;
+                let img = document.getElementById("charms").children.item(x);
 
                 if (img.getAttribute("src") == src) {
-                    e.target.parentNode.outerHTML = '';
+                    e.target.outerHTML = '';
                     updateNotches(-charms[name][0]);
                     img.classList.remove("equipped");
                 }
@@ -156,7 +156,7 @@ document.getElementById("charms").addEventListener("click", function (e) {
             } else if (totalCost < 11) {
                 e.target.classList.add("equipped");
 
-                document.getElementById("equipped").innerHTML += `<div><img class="charm" src="${src}"></div>`;
+                document.getElementById("equipped").innerHTML += `<img class="charm" src="${src}">`;
                 updateNotches(charms[name][0]);
             }
         }
@@ -206,7 +206,7 @@ document.getElementById("useless_charm").addEventListener("contextmenu", functio
 
         let children = document.getElementById("equipped").children;
         for (let x = 0; x < children.length; ++x) {
-            if (children[x].firstChild.getAttribute("src") === king) {
+            if (children[x].getAttribute("src") === king) {
                 children[x].outerHTML = '';
                 updateNotches(-5);
             }
