@@ -29,6 +29,7 @@ h1, h2, h3 {
 
 h1 {
   font-size: 2.9em;
+  width: 100%;
 }
 
 h2 {
@@ -64,13 +65,20 @@ hr {
 
 #calc {
   flex-grow: 1;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  display: flex;
+  flex-direction: row;
   margin: 5.8em 10.5em 0;
 }
 
+@media (max-width: 1400px) {
+  #calc {
+    flex-direction: column;
+    margin: 5.8em 3em 0;
+  }
+}
+
 #left {
-  grid-column: 1 / 7;
+  min-width: 60%;
   display: flex;
   flex-direction: column;
 }
@@ -78,7 +86,6 @@ hr {
 #right {
   margin-left: 1.5em;
   margin-right: 1em;
-  grid-column: 7 / 11;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -93,6 +100,7 @@ hr {
 }
 
 #equipped {
+  margin-top: 1em;
   margin-left: 1.8em;
   margin-bottom: 2em;
   display: flex;
@@ -124,6 +132,7 @@ hr {
 }
 
 #charms {
+  margin-bottom: 4em;
   display: grid;
   grid-template-columns: repeat(21, 1fr);
   grid-auto-rows: minmax(min-content, max-content);
@@ -152,6 +161,7 @@ hr {
 
 #name {
   margin-bottom: 0.5em;
+  text-align: center;
 }
 
 #cost {
