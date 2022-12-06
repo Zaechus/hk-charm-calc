@@ -60,10 +60,10 @@ function selectCharm(file) {
     let cost = document.getElementById("cost");
     cost.innerHTML = '';
     if (charms[name][0] > 0) {
-        cost.innerHTML += "<p>Cost</p>";
-    }
-    for (let x = 0; x < charms[name][0]; ++x) {
-        cost.innerHTML += "<div><img src=\"assets/HK_Notch.png\"></div>";
+        cost.innerHTML = "<p>Cost</p>";
+        for (let x = 0; x < charms[name][0]; ++x) {
+            cost.innerHTML += "<div><img src=\"assets/HK_Notch.png\"></div>";
+        }
     }
 }
 
@@ -87,33 +87,30 @@ function updateNotches(cost) {
     for (let x = 0; x < totalCost; ++x) {
         document.getElementById("notch_list").children.item(x).style.opacity = "100%";
     }
-    for (let x = 0; x < totalCost; ++x) {
-        document.getElementById("notch_list").children.item(x).style.opacity = "100%";
-    }
     if (totalCost > 11) {
         overcharmed.innerHTML = "OVERCHARMED";
         overcharmed.style.color = "#f0f"
     }
 }
 
-document.getElementById("charms").addEventListener("click", function (e) {
-    if (e.target.tagName === "IMG") {
-        let src = e.target.getAttribute("src");
-        let name = fileToName(src);
+function removeEquipped(src) {
+    let name = fileToName(src);
+    let children = document.getElementById("equipped").children;
 
-        if (name != "Void Heart") {
-            if (e.target.classList.contains("equipped")) {
-                removeEquipped(src);
-            } else if (totalCost < 11) {
-                e.target.classList.add("equipped");
-
-                document.getElementById("equipped").innerHTML += `<div><img class="charm" src="${src}"></div>`;
-                updateNotches(charms[name][0]);
-            }
+    for (let x = 0; x < children.length; ++x) {
+        if (children[x].firstChild.getAttribute("src") === src) {
+            children[x].outerHTML = '';
+            updateNotches(-charms[name][0]);
         }
     }
-});
+    for (let x = 0; x < 40; ++x) {
+        let img = document.getElementById("charms").children.item(x).firstChild;
 
+        if (img.getAttribute("src") == src) {
+            img.classList.remove("equipped");
+        }
+    }
+}
 
 document.getElementById("equipped").addEventListener("mouseover", function (e) {
     if (e.target.tagName === "IMG") {
@@ -148,24 +145,23 @@ document.getElementById("equipped").addEventListener("click", function (e) {
     }
 });
 
-function removeEquipped(src) {
-    let name = fileToName(src);
-    let children = document.getElementById("equipped").children;
+document.getElementById("charms").addEventListener("click", function (e) {
+    if (e.target.tagName === "IMG") {
+        let src = e.target.getAttribute("src");
+        let name = fileToName(src);
 
-    for (let x = 0; x < children.length; ++x) {
-        if (children[x].firstChild.getAttribute("src") === src) {
-            children[x].outerHTML = '';
-            updateNotches(-charms[name][0]);
+        if (name != "Void Heart") {
+            if (e.target.classList.contains("equipped")) {
+                removeEquipped(src);
+            } else if (totalCost < 11) {
+                e.target.classList.add("equipped");
+
+                document.getElementById("equipped").innerHTML += `<div><img class="charm" src="${src}"></div>`;
+                updateNotches(charms[name][0]);
+            }
         }
     }
-    for (let x = 0; x < 40; ++x) {
-        let img = document.getElementById("charms").children.item(x).firstChild;
-
-        if (img.getAttribute("src") == src) {
-            img.classList.remove("equipped");
-        }
-    }
-}
+});
 
 function switchCharm(e, a, b) {
     let src = e.target.getAttribute("src");
@@ -206,6 +202,7 @@ document.getElementById("useless_charm").addEventListener("contextmenu", functio
         e.target.src = voidh;
         selectCharm(voidh);
         document.getElementById("void_heart").style.opacity = "100%";
+        document.getElementById("useless_charm").classList.add("equipped");
 
         let children = document.getElementById("equipped").children;
         for (let x = 0; x < children.length; ++x) {
