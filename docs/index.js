@@ -58,12 +58,13 @@ function selectCharm(file) {
     document.getElementById("desc").innerText = charms[name][1];
 
     let cost = document.getElementById("cost");
-    cost.innerHTML = '';
     if (charms[name][0] > 0) {
         cost.innerHTML = "<p>Cost</p>";
         for (let x = 0; x < charms[name][0]; ++x) {
             cost.innerHTML += "<img src=\"assets/HK_Notch.png\">";
         }
+    } else {
+        cost.innerHTML = ' ';
     }
 }
 
@@ -74,10 +75,6 @@ let totalCost = 0;
 function updateNotches(cost) {
     totalCost += cost;
 
-    let overcharmed = document.getElementById("overcharmed");
-    overcharmed.innerHTML = "Equipped";
-    overcharmed.style.color = "#fff";
-
     for (let x = 0; x < 11; ++x) {
         document.getElementById("notches").children.item(x).style.opacity = "33%";
     }
@@ -87,9 +84,15 @@ function updateNotches(cost) {
     for (let x = 0; x < totalCost; ++x) {
         document.getElementById("notches").children.item(x).style.opacity = "100%";
     }
+
+    let overcharmed = document.getElementById("overcharmed");
+
     if (totalCost > 11) {
         overcharmed.innerHTML = "OVERCHARMED";
         overcharmed.style.color = "#f0f"
+    } else {
+        overcharmed.innerHTML = "Equipped";
+        overcharmed.style.color = "#fff";
     }
 }
 
@@ -106,24 +109,19 @@ function removeEquipped(src) {
     for (let x = 0; x < 40; ++x) {
         let img = document.getElementById("charms").children.item(x);
 
-        if (img.getAttribute("src") == src) {
+        if (img.getAttribute("src") === src) {
             img.classList.remove("equipped");
         }
     }
 }
 
-document.getElementById("equipped").addEventListener("mouseover", function (e) {
-    if (e.target.tagName === "IMG") {
-        let src = e.target.getAttribute("src");
-        selectCharm(src);
-    }
-});
-
-document.getElementById("charms").addEventListener("mouseover", function (e) {
-    if (e.target.tagName === "IMG") {
-        let src = e.target.getAttribute("src");
-        selectCharm(src);
-    }
+document.querySelectorAll("#equipped, #charms").forEach(function (el) {
+    el.addEventListener("mouseover", function (e) {
+        if (e.target.tagName === "IMG") {
+            let src = e.target.getAttribute("src");
+            selectCharm(src);
+        }
+    });
 });
 
 document.getElementById("equipped").addEventListener("click", function (e) {
@@ -163,41 +161,32 @@ document.getElementById("charms").addEventListener("click", function (e) {
     }
 });
 
-function switchCharm(e, a, b) {
-    let src = e.target.getAttribute("src");
+function switchCharm(id, a, b) {
+    document.getElementById(id).addEventListener("contextmenu", function (e) {
+        let src = e.target.getAttribute("src");
 
-    if (src === a) {
-        removeEquipped(a);
-        e.target.src = b;
-        selectCharm(b);
-    } else if (src === b) {
-        removeEquipped(b);
-        e.target.src = a;
-        selectCharm(a);
-    }
+        if (src === a) {
+            removeEquipped(a);
+            e.target.src = b;
+            selectCharm(b);
+        } else if (src === b) {
+            removeEquipped(b);
+            e.target.src = a;
+            selectCharm(a);
+        }
+    });
 }
 
-document.getElementById("heart").addEventListener("contextmenu", function (e) {
-    switchCharm(e, "assets/Fragile_Heart.png", "assets/Unbreakable_Heart.png")
-});
-
-document.getElementById("greed").addEventListener("contextmenu", function (e) {
-    switchCharm(e, "assets/Fragile_Greed.png", "assets/Unbreakable_Greed.png")
-});
-
-document.getElementById("strength").addEventListener("contextmenu", function (e) {
-    switchCharm(e, "assets/Fragile_Strength.png", "assets/Unbreakable_Strength.png")
-});
-
-document.getElementById("grimm_charm").addEventListener("contextmenu", function (e) {
-    switchCharm(e, "assets/Carefree_Melody.png", "assets/Grimmchild.png")
-});
+switchCharm("heart", "assets/Fragile_Heart.png", "assets/Unbreakable_Heart.png")
+switchCharm("greed", "assets/Fragile_Greed.png", "assets/Unbreakable_Greed.png")
+switchCharm("strength", "assets/Fragile_Strength.png", "assets/Unbreakable_Strength.png")
+switchCharm("grimm_charm", "assets/Carefree_Melody.png", "assets/Grimmchild.png")
 
 document.getElementById("useless_charm").addEventListener("contextmenu", function (e) {
+    let src = e.target.getAttribute("src");
     let king = "assets/Kingsoul.png";
     let voidh = "assets/Void_Heart.png"
 
-    let src = e.target.getAttribute("src");
     if (src === king) {
         e.target.src = voidh;
         selectCharm(voidh);
@@ -208,7 +197,7 @@ document.getElementById("useless_charm").addEventListener("contextmenu", functio
         for (let x = 0; x < children.length; ++x) {
             if (children[x].getAttribute("src") === king) {
                 children[x].outerHTML = '';
-                updateNotches(-5);
+                updateNotches(-charms[fileToName(king)][0]);
             }
         }
     } else if (src === voidh) {
